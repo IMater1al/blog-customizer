@@ -9,21 +9,48 @@ import { Select } from '../select';
 import {
 	backgroundColors,
 	contentWidthArr,
-	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
+	initialFormState,
+	OptionType,
 } from 'src/constants/articleProps';
 import { Space } from '../space/Space';
 import { Separator } from '../separator';
 import { RadioGroup } from '../radio-group';
 
+export interface IFormSettings {
+	fontFamily: OptionType;
+	fontSize: OptionType;
+	fontColor: OptionType;
+	backgroundColor: OptionType;
+	contentWidth: OptionType;
+}
+
 export const ArticleParamsForm = () => {
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+	const [formSettings, setFormSettings] =
+		useState<IFormSettings>(initialFormState);
+
+	function handleOptionChange(option: OptionType, name?: keyof IFormSettings) {
+		if (name) {
+			setFormSettings({ ...formSettings, [name]: option });
+		}
+	}
 
 	function toggleSidebar() {
 		setIsSidebarOpen((prev) => !prev);
 	}
+
+	function handleSubmit(event: React.MouseEvent) {
+		event.preventDefault();
+	}
+
+	function handleReset() {
+		setFormSettings(initialFormState);
+	}
+
+	// useOutsideClickClose(isSidebarOpen);
 
 	return (
 		<>
@@ -40,40 +67,49 @@ export const ArticleParamsForm = () => {
 					</Text>
 					<Space />
 					<Select
+						name='fontFamily'
+						onChange={handleOptionChange}
 						title='Шрифт'
 						options={fontFamilyOptions}
-						selected={defaultArticleState.fontFamilyOption}
+						selected={formSettings.fontFamily}
 					/>
 					<Space />
 					<RadioGroup
-						name='size-radio'
+						onChange={handleOptionChange}
+						name='fontSize'
 						title='Размер шрифта'
 						options={fontSizeOptions}
-						selected={defaultArticleState.fontSizeOption}
+						selected={formSettings.fontSize}
 					/>
 					<Space />
 					<Select
+						onChange={handleOptionChange}
+						name='fontColor'
 						title='Цвет шрифта'
 						options={fontColors}
-						selected={defaultArticleState.fontColor}
+						selected={formSettings.fontColor}
 					/>
 					<Space />
 					<Separator />
 					<Space />
 					<Select
+						onChange={handleOptionChange}
+						name='backgroundColor'
 						title='Цвет фона'
 						options={backgroundColors}
-						selected={defaultArticleState.backgroundColor}
+						selected={formSettings.backgroundColor}
 					/>
 					<Space />
 					<Select
+						onChange={handleOptionChange}
+						name='contentWidth'
 						title='Ширина контента'
 						options={contentWidthArr}
-						selected={defaultArticleState.contentWidth}
+						selected={formSettings.contentWidth}
 					/>
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='reset' />
-						<Button title='Применить' type='submit' />
+						<Button onClick={handleReset} title='Сбросить' type='reset' />
+						<Button onClick={handleSubmit} title='Применить' type='submit' />
 					</div>
 				</form>
 			</aside>
