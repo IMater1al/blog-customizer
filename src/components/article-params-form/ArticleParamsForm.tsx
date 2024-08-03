@@ -3,7 +3,7 @@ import { Button } from 'components/button';
 
 import styles from './ArticleParamsForm.module.scss';
 import { Text } from '../text';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Select } from '../select';
 import {
@@ -27,16 +27,58 @@ export interface IFormSettings {
 	contentWidth: OptionType;
 }
 
-export const ArticleParamsForm = () => {
-	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-	const [formSettings, setFormSettings] =
-		useState<IFormSettings>(initialFormState);
+export interface ArticleParamsFormProps {
+	onApply(settings: IFormSettings): void;
+}
 
-	function handleOptionChange(option: OptionType, name?: keyof IFormSettings) {
-		if (name) {
-			setFormSettings({ ...formSettings, [name]: option });
-		}
+export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
+	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+	const [options, setOptions] = useState<IFormSettings>(initialFormState);
+
+	const articleRef = useRef<HTMLDivElement>(null);
+
+	function handleOptionChange(option: OptionType, name: keyof IFormSettings) {
+		setOptions({ ...options, [name]: option });
 	}
+
+	useEffect(() => {
+		if (isSidebarOpen) {
+			document.body.style.overflow = 'hidden';
+		}
+		return () => {
+			document.body.style.overflow = '';
+		};
+	}, [isSidebarOpen]);
+
+	useEffect(() => {
+		function handleClose(event: Event) {
+			if (event instanceof KeyboardEvent) {
+				if (event.key === 'Escape') {
+					setIsSidebarOpen(false);
+				}
+			}
+
+			if (event instanceof MouseEvent) {
+				if (
+					event.target instanceof Node &&
+					!articleRef.current?.contains(event.target) &&
+					!(event.target instanceof HTMLLIElement)
+				) {
+					setIsSidebarOpen(false);
+				}
+			}
+		}
+
+		if (isSidebarOpen) {
+			document.addEventListener('keydown', handleClose);
+			document.addEventListener('click', handleClose);
+		}
+
+		return () => {
+			document.removeEventListener('keydown', handleClose);
+			document.removeEventListener('click', handleClose);
+		};
+	}, [isSidebarOpen]);
 
 	function toggleSidebar() {
 		setIsSidebarOpen((prev) => !prev);
@@ -44,16 +86,15 @@ export const ArticleParamsForm = () => {
 
 	function handleSubmit(event: React.MouseEvent) {
 		event.preventDefault();
+		onApply(options);
 	}
 
 	function handleReset() {
-		setFormSettings(initialFormState);
+		setOptions(initialFormState);
 	}
 
-	// useOutsideClickClose(isSidebarOpen);
-
 	return (
-		<>
+		<div ref={articleRef}>
 			<ArrowButton onClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
 
 			<aside
@@ -71,7 +112,7 @@ export const ArticleParamsForm = () => {
 						onChange={handleOptionChange}
 						title='Шрифт'
 						options={fontFamilyOptions}
-						selected={formSettings.fontFamily}
+						selected={options.fontFamily}
 					/>
 					<Space />
 					<RadioGroup
@@ -79,7 +120,7 @@ export const ArticleParamsForm = () => {
 						name='fontSize'
 						title='Размер шрифта'
 						options={fontSizeOptions}
-						selected={formSettings.fontSize}
+						selected={options.fontSize}
 					/>
 					<Space />
 					<Select
@@ -87,7 +128,7 @@ export const ArticleParamsForm = () => {
 						name='fontColor'
 						title='Цвет шрифта'
 						options={fontColors}
-						selected={formSettings.fontColor}
+						selected={options.fontColor}
 					/>
 					<Space />
 					<Separator />
@@ -97,7 +138,7 @@ export const ArticleParamsForm = () => {
 						name='backgroundColor'
 						title='Цвет фона'
 						options={backgroundColors}
-						selected={formSettings.backgroundColor}
+						selected={options.backgroundColor}
 					/>
 					<Space />
 					<Select
@@ -105,7 +146,7 @@ export const ArticleParamsForm = () => {
 						name='contentWidth'
 						title='Ширина контента'
 						options={contentWidthArr}
-						selected={formSettings.contentWidth}
+						selected={options.contentWidth}
 					/>
 					<div className={styles.bottomContainer}>
 						<Button onClick={handleReset} title='Сбросить' type='reset' />
@@ -113,6 +154,6 @@ export const ArticleParamsForm = () => {
 					</div>
 				</form>
 			</aside>
-		</>
+		</div>
 	);
 };

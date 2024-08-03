@@ -16,10 +16,10 @@ type SelectProps = {
 	selected: OptionType | null;
 	options: OptionType[];
 	placeholder?: string;
-	onChange?: (selected: OptionType, name?: keyof IFormSettings) => void;
+	onChange?: (selected: OptionType, name: keyof IFormSettings) => void;
 	onClose?: () => void;
 	title?: string;
-	name?: keyof IFormSettings;
+	name: keyof IFormSettings;
 };
 
 export const Select = (props: SelectProps) => {

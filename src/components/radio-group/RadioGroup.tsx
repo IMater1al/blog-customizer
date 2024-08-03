@@ -9,7 +9,7 @@ type RadioGroupProps = {
 	name: keyof IFormSettings;
 	options: OptionType[];
 	selected: OptionType;
-	onChange?: (value: OptionType, name?: keyof IFormSettings) => void;
+	onChange?: (value: OptionType, name: keyof IFormSettings) => void;
 	title: string;
 };
 
