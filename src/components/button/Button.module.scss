@@ -10,10 +10,10 @@
 	cursor: pointer;
 }
 
-.button:active {
-	background-color: #ffc802;
-}
-
 .button:hover {
 	background-color: #ffedab;
+}
+
+.button:active {
+	background-color: #ffc802;
 }

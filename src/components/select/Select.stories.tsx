@@ -22,6 +22,7 @@ const SelectWithState = () => {
 	return (
 		<>
 			<Select
+				name='fontFamily'
 				selected={selected}
 				onChange={setSelected}
 				options={options}
