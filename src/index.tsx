@@ -16,9 +16,11 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
+	//Стейт с настройками страницы
 	const [pageSettings, setPageSettings] =
 		useState<IFormSettings>(initialFormState);
 
+	//Коллбек через который применяются настройки на страницу
 	function handleApply(settings: IFormSettings) {
 		setPageSettings(settings);
 	}

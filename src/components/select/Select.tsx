@@ -12,6 +12,8 @@ import { useOutsideClickClose } from './hooks/useOutsideClickClose';
 import styles from './Select.module.scss';
 import { IFormSettings } from '../article-params-form/ArticleParamsForm';
 
+//Пришлось добавить поле имя, чтобы не нужно было писать для каждого селекта свою функцию обработки
+// В коллбек просто передается кроме выбранной опции еще и имя
 type SelectProps = {
 	selected: OptionType | null;
 	options: OptionType[];

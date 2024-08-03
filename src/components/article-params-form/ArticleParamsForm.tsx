@@ -33,14 +33,18 @@ export interface ArticleParamsFormProps {
 
 export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+	//Данные о выбранных опциях через форму
 	const [options, setOptions] = useState<IFormSettings>(initialFormState);
 
+	//Достаем реф для отслеживания нажатия вне его
 	const articleRef = useRef<HTMLDivElement>(null);
 
+	//Функция для обработки изменений в селектах
 	function handleOptionChange(option: OptionType, name: keyof IFormSettings) {
 		setOptions({ ...options, [name]: option });
 	}
 
+	//Чтобы при открытии сайдбара нельзя было скролить
 	useEffect(() => {
 		if (isSidebarOpen) {
 			document.body.style.overflow = 'hidden';
@@ -50,6 +54,7 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 		};
 	}, [isSidebarOpen]);
 
+	//Хук выполняющий функции закрытия по нажатию вне окна и с помощью клавиши 'Esc'
 	useEffect(() => {
 		function handleClose(event: Event) {
 			if (event instanceof KeyboardEvent) {
@@ -80,15 +85,19 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 		};
 	}, [isSidebarOpen]);
 
+	//Функция открытия и закрытия сайдбара
 	function toggleSidebar() {
 		setIsSidebarOpen((prev) => !prev);
 	}
 
+	//Функция обработки для кнопки 'Применить'
 	function handleSubmit(event: React.MouseEvent) {
 		event.preventDefault();
 		onApply(options);
+		setIsSidebarOpen(false);
 	}
 
+	//Функция обработки для кнопки 'Сбросить'
 	function handleReset() {
 		setOptions(initialFormState);
 	}
