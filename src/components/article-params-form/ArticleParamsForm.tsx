@@ -3,7 +3,7 @@ import { Button } from 'components/button';
 
 import styles from './ArticleParamsForm.module.scss';
 import { Text } from '../text';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Select } from '../select';
 import {
@@ -91,7 +91,7 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 	}
 
 	//Функция обработки для кнопки 'Применить'
-	function handleSubmit(event: React.MouseEvent) {
+	function handleSubmit(event: FormEvent) {
 		event.preventDefault();
 		onApply(options);
 		setIsSidebarOpen(false);
@@ -111,7 +111,7 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 					styles.container,
 					isSidebarOpen && styles.container_open
 				)}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={handleSubmit}>
 					<Text as={'h2'} size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
@@ -159,7 +159,7 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 					/>
 					<div className={styles.bottomContainer}>
 						<Button onClick={handleReset} title='Сбросить' type='reset' />
-						<Button onClick={handleSubmit} title='Применить' type='submit' />
+						<Button title='Применить' type='submit' />
 					</div>
 				</form>
 			</aside>
