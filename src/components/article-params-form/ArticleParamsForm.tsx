@@ -18,6 +18,7 @@ import {
 import { Space } from '../space/Space';
 import { Separator } from '../separator';
 import { RadioGroup } from '../radio-group';
+import { useClose } from './hooks/useClose';
 
 export interface IFormSettings {
 	fontFamily: OptionType;
@@ -55,35 +56,12 @@ export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 	}, [isSidebarOpen]);
 
 	//Хук выполняющий функции закрытия по нажатию вне окна и с помощью клавиши 'Esc'
-	useEffect(() => {
-		function handleClose(event: Event) {
-			if (event instanceof KeyboardEvent) {
-				if (event.key === 'Escape') {
-					setIsSidebarOpen(false);
-				}
-			}
 
-			if (event instanceof MouseEvent) {
-				if (
-					event.target instanceof Node &&
-					!articleRef.current?.contains(event.target) &&
-					!(event.target instanceof HTMLLIElement)
-				) {
-					setIsSidebarOpen(false);
-				}
-			}
-		}
-
-		if (isSidebarOpen) {
-			document.addEventListener('keydown', handleClose);
-			document.addEventListener('click', handleClose);
-		}
-
-		return () => {
-			document.removeEventListener('keydown', handleClose);
-			document.removeEventListener('click', handleClose);
-		};
-	}, [isSidebarOpen]);
+	useClose({
+		isOpen: isSidebarOpen,
+		onClose: () => setIsSidebarOpen(false),
+		rootRef: articleRef,
+	});
 
 	//Функция открытия и закрытия сайдбара
 	function toggleSidebar() {
