@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { Article } from '../article';
 import { ArticleParamsForm } from '../article-params-form';
 import { IFormSettings } from '../article-params-form/ArticleParamsForm';
@@ -21,7 +20,7 @@ export const App = () => {
 		<>
 			<header></header>
 			<main
-				className={clsx(styles.main)}
+				className={styles.main}
 				style={
 					{
 						'--font-family': pageSettings.fontFamily.value,
